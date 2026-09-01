@@ -3,11 +3,13 @@ const router = express.Router();
 
 const { getAllSlots, getSlotById, createSlot, deleteSlot } = require("../controllers/slotController");
 
+const validateSlot = require("../middleware/validateSlot");
+
 router.get("/", getAllSlots);
 
 router.get("/:id", getSlotById);
 
-router.post("/", createSlot);
+router.post("/", validateSlot, createSlot);
 
 router.delete("/:id", deleteSlot);
 
