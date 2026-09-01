@@ -4,6 +4,10 @@ const app = express();
 
 app.use(express.json());
 
+const logger = require("./middleware/logger");
+
+app.use(logger);
+
 const slotRoutes = require("./routes/slotRoutes");
 
 app.use("/slots", slotRoutes);
