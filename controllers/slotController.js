@@ -24,37 +24,43 @@ const getSlotById = async (req, res) => {
     }
 };
 
-const createSlot = (req, res) => {
-    const { date, time, duration } = req.body;
+const createSlot = async (req, res) => {
+    try {
+        const { date, time, duration } = req.body;
 
-    const newSlot = {
-        id: slots.length + 1,
-        date,
-        time,
-        duration,
-        isBooked: false
-    };
+        const newSlot = await Slot.create({
+            date,
+            time,
+            duration,
+            isBooked: false
+        });
 
-    slots.push(newSlot);
-
-    return res.status(201).json(newSlot);
+        return res.status(201).json(newSlot);
+    } catch (error) {
+        return res.status(500).json({
+            message: "Failed to create slot"
+        });
+    }
 };
 
-const deleteSlot = (req, res) => {
-    const id = Number(req.params.id);
+const deleteSlot = async (req, res) => {
+    try {
+        const deletedSlot = await Slot.findByIdAndDelete(req.params.id);
 
-    const index = slots.findIndex((slot) => slot.id === id);
+        if (!deletedSlot) {
+            return res.status(404).json({
+                message: "Slot not found"
+            });
+        }
 
-    if (index === -1) {
-    return res.status(404).json({
-        message: "Slot not found"
-    });
-}
-slots.splice(index, 1);
-
-return res.status(200).json({
-    message: "Slot deleted successfully"
-});
+        return res.status(200).json({
+            message: "Slot deleted successfully"
+        });
+    } catch (error) {
+        return res.status(404).json({
+            message: "Slot not found"
+        });
+    }
 };
 
 module.exports = {
