@@ -1,4 +1,7 @@
+require("dotenv").config();
+
 const express = require("express");
+const mongoose = require("mongoose");
 
 const app = express();
 
@@ -18,6 +21,14 @@ app.get("/", (req, res) => {
     });
 });
 
-app.listen(3000, () => {
-    console.log("Slotify server is running on port 3000");
-});
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => {
+        console.log("MongoDB connected successfully");
+
+        app.listen(3000, () => {
+            console.log("Slotify server is running on port 3000");
+        });
+    })
+    .catch((error) => {
+        console.error("MongoDB connection failed:", error.message);
+    });

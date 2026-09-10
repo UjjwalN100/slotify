@@ -1,19 +1,27 @@
-const slots = require("../data/slots");
+const Slot = require("../models/slot");
 
-const getAllSlots = (req, res) => {
-    res.status(200).json(slots);
+const getAllSlots = async (req, res) => {
+    const slots = await Slot.find();
+
+    return res.status(200).json(slots);
 };
 
-const getSlotById = (req, res) => {
-    const id = Number(req.params.id);
-    const slot = slots.find((slot) => slot.id === id);
-    if (!slot) {
-    return res.status(404).json({
-        message: "Slot not found"
-    });
-}
+const getSlotById = async (req, res) => {
+    try {
+        const slot = await Slot.findById(req.params.id);
 
-return res.status(200).json(slot);
+        if (!slot) {
+            return res.status(404).json({
+                message: "Slot not found"
+            });
+        }
+
+        return res.status(200).json(slot);
+    } catch (error) {
+        return res.status(404).json({
+            message: "Slot not found"
+        });
+    }
 };
 
 const createSlot = (req, res) => {
