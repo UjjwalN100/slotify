@@ -63,9 +63,35 @@ const deleteSlot = async (req, res) => {
     }
 };
 
+const updateSlot = async (req, res) => {
+    try {
+        const updatedSlot = await Slot.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            {
+                new: true,
+                runValidators: true
+            }
+        );
+
+        if (!updatedSlot) {
+            return res.status(404).json({
+                message: "Slot not found"
+            });
+        }
+
+        return res.status(200).json(updatedSlot);
+    } catch (error) {
+        return res.status(404).json({
+            message: "Slot not found"
+        });
+    }
+};
+
 module.exports = {
     getAllSlots,
     getSlotById,
     createSlot,
-    deleteSlot
+    deleteSlot,
+    updateSlot
 };
