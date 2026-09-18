@@ -12,8 +12,10 @@ const logger = require("./middleware/logger");
 app.use(logger);
 
 const slotRoutes = require("./routes/slotRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 app.use("/slots", slotRoutes);
+app.use("/auth", authRoutes);
 
 app.get("/", (req, res) => {
     res.json({
