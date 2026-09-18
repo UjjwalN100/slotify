@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const protect = require("../middleware/authMiddleware");
 
 const {
     getAllSlots,
@@ -15,9 +16,9 @@ router.get("/", getAllSlots);
 
 router.get("/:id", getSlotById);
 
-router.post("/", validateSlot, createSlot);
+router.post("/", protect, validateSlot, createSlot);
 
-router.delete("/:id", deleteSlot);
+router.delete("/:id", protect, deleteSlot);
 
 router.put("/:id", updateSlot);
 
