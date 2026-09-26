@@ -191,6 +191,20 @@ const cancelBooking = async (req, res) => {
     }
 };
 
+const getMyBookings = async (req, res) => {
+    try {
+        const bookings = await Slot.find({
+            bookedBy: req.user.userId
+        });
+
+        return res.status(200).json(bookings);
+    } catch (error) {
+        return res.status(500).json({
+            message: "Failed to get bookings"
+        });
+    }
+};
+
 module.exports = {
     getAllSlots,
     getSlotById,
@@ -198,5 +212,6 @@ module.exports = {
     deleteSlot,
     updateSlot,
     bookSlot,
-    cancelBooking
+    cancelBooking,
+    getMyBookings
 };

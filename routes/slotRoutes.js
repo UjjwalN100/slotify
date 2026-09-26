@@ -9,12 +9,15 @@ const {
     deleteSlot,
     updateSlot,
     bookSlot,
-    cancelBooking
+    cancelBooking,
+    getMyBookings
 } = require("../controllers/slotController");
 
 const validateSlot = require("../middleware/validateSlot");
 
 router.get("/", getAllSlots);
+
+router.get("/bookings/me", protect, getMyBookings);
 
 router.get("/:id", getSlotById);
 
