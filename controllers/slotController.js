@@ -120,11 +120,50 @@ const bookSlot = async (req, res) => {
     }
 };
 
+const cancelBooking = async (req, res) => {
+    try {
+        const slot = await Slot.findById(req.params.id);
+
+        if (!slot) {
+            return res.status(404).json({
+                message: "Slot not found"
+            });
+        }
+
+        if (!slot.isBooked) {
+            return res.status(400).json({
+                message: "Slot is not booked"
+            });
+        }
+
+        if (slot.bookedBy.toString() !== req.user.userId) {
+            return res.status(403).json({
+                message: "You are not allowed to cancel this booking"
+            });
+        }
+
+        slot.isBooked = false;
+        slot.bookedBy = null;
+
+        await slot.save();
+
+        return res.status(200).json({
+            message: "Booking cancelled successfully",
+            slot
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: "Failed to cancel booking"
+        });
+    }
+};
+
 module.exports = {
     getAllSlots,
     getSlotById,
     createSlot,
     deleteSlot,
     updateSlot,
-    bookSlot
+    bookSlot,
+    cancelBooking
 };

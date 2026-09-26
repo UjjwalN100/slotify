@@ -8,7 +8,8 @@ const {
     createSlot,
     deleteSlot,
     updateSlot,
-    bookSlot
+    bookSlot,
+    cancelBooking
 } = require("../controllers/slotController");
 
 const validateSlot = require("../middleware/validateSlot");
@@ -20,6 +21,8 @@ router.get("/:id", getSlotById);
 router.post("/", protect, validateSlot, createSlot);
 
 router.post("/:id/book", protect, bookSlot);
+
+router.post("/:id/cancel", protect, cancelBooking);
 
 router.delete("/:id", protect, deleteSlot);
 
