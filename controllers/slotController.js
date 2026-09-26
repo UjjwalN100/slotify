@@ -40,6 +40,27 @@ const createSlot = async (req, res) => {
     try {
         const { date, time, duration } = req.body;
 
+        const newStart = new Date(`${date}T${time}`);
+        const newEnd = new Date(newStart.getTime() + duration * 60000);
+
+        const existingSlots = await Slot.find({ date });
+
+        for (const slot of existingSlots) {
+            const existingStart = new Date(`${slot.date}T${slot.time}`);
+            const existingEnd = new Date(
+                existingStart.getTime() + slot.duration * 60000
+            );
+
+            const isOverlapping =
+                newStart < existingEnd && newEnd > existingStart;
+
+            if (isOverlapping) {
+                return res.status(409).json({
+                    message: "Slot overlaps with an existing slot"
+                });
+            }
+        }
+
         const newSlot = await Slot.create({
             date,
             time,
