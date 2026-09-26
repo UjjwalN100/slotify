@@ -1,9 +1,21 @@
 const Slot = require("../models/slot");
 
 const getAllSlots = async (req, res) => {
-    const slots = await Slot.find();
+    try {
+        let slots;
 
-    return res.status(200).json(slots);
+        if (req.query.available === "true") {
+            slots = await Slot.find({ isBooked: false });
+        } else {
+            slots = await Slot.find();
+        }
+
+        return res.status(200).json(slots);
+    } catch (error) {
+        return res.status(500).json({
+            message: "Failed to get slots"
+        });
+    }
 };
 
 const getSlotById = async (req, res) => {
